@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react-hooks';
-import { useParams } from 'react-router-dom';
+import * as reactRouterDom from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { fetchCoursewareSearchSettings } from '../data/thunks';
 import {
@@ -7,7 +7,10 @@ import {
 } from './hooks';
 
 jest.mock('react-redux');
-jest.mock('react-router-dom');
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useParams: jest.fn(),
+}));
 jest.mock('../data/thunks');
 
 describe('CoursewareSearch Hooks', () => {
@@ -26,7 +29,7 @@ describe('CoursewareSearch Hooks', () => {
 
   describe('useCoursewareSearchFeatureFlag', () => {
     const renderTestHook = async (enabled = true) => {
-      useParams.mockImplementation(() => ({ courseId: enabled ? 123 : 456 }));
+      reactRouterDom.useParams.mockImplementation(() => ({ courseId: enabled ? 123 : 456 }));
       let hook;
       await act(async () => { (hook = renderHook(() => useCoursewareSearchFeatureFlag())); });
       return hook;
@@ -47,7 +50,7 @@ describe('CoursewareSearch Hooks', () => {
 
   describe('useCoursewareSearchState', () => {
     const renderTestHook = async ({ enabled, showSearch }) => {
-      useParams.mockImplementation(() => ({ courseId: enabled ? 123 : 456 }));
+      reactRouterDom.useParams.mockImplementation(() => ({ courseId: enabled ? 123 : 456 }));
       const mockedStoreState = { courseHome: { showSearch } };
       useSelector.mockImplementation(selector => selector(mockedStoreState));
 
