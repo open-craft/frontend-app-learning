@@ -32,11 +32,7 @@ const CourseBreadcrumb = ({
       )}
 
       <li
-        style={{
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}
+        className="reactive-crumbs"
         data-testid="breadcrumb-item"
       >
         {showRegularLink ? (
