@@ -20,12 +20,7 @@ const CourseBreadcrumb = ({
         <li className="col-auto p-0 mx-2 text-primary-500 text-truncate text-nowrap" role="presentation" aria-hidden>/</li>
       )}
 
-      <li style={{
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-      }}
-      >
+      <li className="reactive-crumbs">
         { getConfig().ENABLE_JUMPNAV !== 'true' || content.length < 2 || !isStaff
           ? (
             <Link
