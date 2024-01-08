@@ -25,6 +25,15 @@ const CourseBreadcrumb = ({
   const showRegularLink = getConfig().ENABLE_JUMPNAV !== 'true' || content.length < 2 || !isStaff;
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
+
+  let regularLinkRoute;
+  if (getConfig().ENABLE_LEGACY_NAV) {
+    regularLinkRoute = `/course/${courseId}/home#${defaultContent.id}`;
+  } else if (defaultContent.sequences.length) {
+    regularLinkRoute = `/course/${courseId}/${defaultContent.sequences[0].id}`;
+  } else {
+    regularLinkRoute = `/course/${courseId}/${defaultContent.id}`;
+  }
   return (
     <>
       {withSeparator && (
@@ -32,22 +41,11 @@ const CourseBreadcrumb = ({
       )}
 
       <li
-        style={{
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}
+        className="reactive-crumbs"
         data-testid="breadcrumb-item"
       >
         {showRegularLink ? (
-          <Link
-            className="text-primary-500"
-            to={
-              defaultContent.sequences.length
-                ? `/course/${courseId}/${defaultContent.sequences[0].id}`
-                : `/course/${courseId}/${defaultContent.id}`
-            }
-          >
+          <Link className="text-primary-500" to={regularLinkRoute}>
             {defaultContent.label}
           </Link>
         ) : (

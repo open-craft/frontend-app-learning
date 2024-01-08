@@ -370,6 +370,18 @@
   }
 }
 
+.reactive-crumbs {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &:hover,
+  &:focus,
+  &:focus-within,
+  &:active {
+    overflow: visible;
+  }
+}
+
 .raised-card {
   border: 0 !important;
   box-shadow: 0 .0625rem .125rem rgba(0, 0, 0, .2) !important;
