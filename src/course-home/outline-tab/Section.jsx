@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useLocation } from 'react-router-dom';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Collapsible, IconButton } from '@edx/paragon';
+import { Badge, Collapsible, IconButton } from '@edx/paragon';
 import { faCheckCircle as fasCheckCircle, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -27,6 +27,7 @@ const Section = ({
     complete,
     sequenceIds,
     title,
+    optional,
   } = section;
   const {
     courseBlocks: {
@@ -74,6 +75,7 @@ const Section = ({
       </div>
       <div className="col-10 ml-3 p-0 font-weight-bold text-dark-500">
         <span className="align-middle">{title}</span>
+        <Badge className="ml-2" variant="light" hidden={!optional}>{intl.formatMessage(messages.optionalContent)}</Badge>
         <span className="sr-only">
           , {intl.formatMessage(complete ? messages.completedSection : messages.incompleteSection)}
         </span>
