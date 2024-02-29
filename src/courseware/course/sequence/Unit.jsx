@@ -143,7 +143,7 @@ const Unit = ({
   return (
     <div className="unit">
       <h1 className="mb-0 h3">{unit.title}</h1>
-      <Badge className="ml-2" variant="light" hidden={!unit.optional}>{intl.formatMessage(messages.optionalContent)}</Badge>
+      <Badge className="ml-2" variant="light" hidden={!unit.optional}>{intl.formatMessage(messages.optionalCompletion)}</Badge>
       <h2 className="sr-only">{intl.formatMessage(messages.headerPlaceholder)}</h2>
       <BookmarkButton
         unitId={unit.id}

@@ -75,7 +75,7 @@ const Section = ({
       </div>
       <div className="col-10 ml-3 p-0 font-weight-bold text-dark-500">
         <span className="align-middle">{title}</span>
-        <Badge className="ml-2" variant="light" hidden={!optional}>{intl.formatMessage(messages.optionalContent)}</Badge>
+        <Badge className="ml-2" variant="light" hidden={!optional}>{intl.formatMessage(messages.optionalCompletion)}</Badge>
         <span className="sr-only">
           , {intl.formatMessage(complete ? messages.completedSection : messages.incompleteSection)}
         </span>

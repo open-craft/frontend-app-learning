@@ -99,7 +99,7 @@ const messages = defineMessages({
     defaultMessage: 'Open',
     description: 'A button to open the given section of the course outline',
   },
-  optionalContent: {
+  optionalCompletion: {
     id: 'learning.outline.optionalBlock',
     defaultMessage: 'Optional',
     description: 'Used as a label to indicate that a section, sequence, or unit is optional.',
