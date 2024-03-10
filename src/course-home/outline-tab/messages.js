@@ -102,7 +102,7 @@ const messages = defineMessages({
   optionalCompletion: {
     id: 'learning.outline.optionalBlock',
     defaultMessage: 'Optional',
-    description: 'Used as a label to indicate that a section, sequence, or unit is optional.',
+    description: 'Used as a label to indicate that a section or sequence is optional.',
   },
   proctoringInfoPanel: {
     id: 'learning.proctoringPanel.header',

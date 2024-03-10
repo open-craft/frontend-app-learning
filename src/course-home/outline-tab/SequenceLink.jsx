@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
+import { Badge } from '@edx/paragon';
 import {
   FormattedMessage,
   FormattedTime,
@@ -33,7 +34,7 @@ const SequenceLink = ({
     due,
     showLink,
     title,
-    optional,
+    optionalCompletion,
   } = sequence;
   const {
     userTimezone,
@@ -129,12 +130,14 @@ const SequenceLink = ({
               , {intl.formatMessage(complete ? messages.completedAssignment : messages.incompleteAssignment)}
             </span>
             <EffortEstimate className="ml-3 align-middle" block={sequence} />
+            {optionalCompletion && (
+              <Badge className="ml-2" variant="light">
+                {intl.formatMessage(messages.optionalCompletion)}
+              </Badge>
+            )}
           </div>
         </div>
         <div className="row w-100 m-0 ml-3 pl-3">
-          <small className="text-body pl-2 pr-0">
-            {optional ? intl.formatMessage(messages.optionalCompletion) : ''}
-          </small>
           <small className="text-body pl-2">
             {due ? dueDateMessage : noDueDateMessage}
           </small>

@@ -1379,4 +1379,96 @@ describe('Progress Tab', () => {
       expect(screen.getByText('Course progress for otherstudent')).toBeInTheDocument();
     });
   });
+
+  describe('Completion Donut Chart', () => {
+    it('Renders optional completion donut chart', async () => {
+      setTabData({
+        completion_summary: {
+          complete_count: 1,
+          incomplete_count: 1,
+          locked_count: 1,
+        },
+        optional_completion_summary: {
+          complete_count: 1,
+          incomplete_count: 1,
+          locked_count: 0,
+        },
+        verified_mode: {
+          access_expiration_date: '2050-01-01T12:00:00',
+          currency: 'USD',
+          currency_symbol: '$',
+          price: 149,
+          sku: 'ABCD1234',
+          upgrade_url: 'edx.org/upgrade',
+        },
+        section_scores: [
+          {
+            display_name: 'First section',
+            subsections: [
+              {
+                assignment_type: 'Homework',
+                block_key: 'block-v1:edX+DemoX+Demo_Course+type@sequential+block@12345',
+                display_name: 'First subsection',
+                learner_has_access: false,
+                has_graded_assignment: true,
+                num_points_earned: 8,
+                num_points_possible: 10,
+                percent_graded: 1.0,
+                show_correctness: 'always',
+                show_grades: true,
+                url: 'http://learning.edx.org/course/course-v1:edX+Test+run/first_subsection',
+              },
+            ],
+          },
+        ],
+      });
+      await fetchAndRender();
+      expect(screen.getByText('optional')).toBeInTheDocument();
+    });
+
+    it('Hides optional completion donut chart', async () => {
+      setTabData({
+        completion_summary: {
+          complete_count: 1,
+          incomplete_count: 1,
+          locked_count: 1,
+        },
+        optional_completion_summary: {
+          complete_count: 0,
+          incomplete_count: 0,
+          locked_count: 0,
+        },
+        verified_mode: {
+          access_expiration_date: '2050-01-01T12:00:00',
+          currency: 'USD',
+          currency_symbol: '$',
+          price: 149,
+          sku: 'ABCD1234',
+          upgrade_url: 'edx.org/upgrade',
+        },
+        section_scores: [
+          {
+            display_name: 'First section',
+            subsections: [
+              {
+                assignment_type: 'Homework',
+                block_key: 'block-v1:edX+DemoX+Demo_Course+type@sequential+block@12345',
+                display_name: 'First subsection',
+                learner_has_access: false,
+                has_graded_assignment: true,
+                num_points_earned: 8,
+                num_points_possible: 10,
+                percent_graded: 1.0,
+                show_correctness: 'always',
+                show_grades: true,
+                url: 'http://learning.edx.org/course/course-v1:edX+Test+run/first_subsection',
+              },
+            ],
+          },
+        ],
+      });
+      await fetchAndRender();
+      expect(screen.queryByText('optional')).not.toBeInTheDocument();
+    });
+  });
 });
