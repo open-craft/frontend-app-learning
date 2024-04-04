@@ -6,11 +6,11 @@ import {
   FormattedDate, FormattedMessage, injectIntl, intlShape,
 } from '@edx/frontend-platform/i18n';
 
-import { Button, Card } from '@edx/paragon';
+import { Button, Card, Hyperlink } from '@edx/paragon';
 import { getConfig } from '@edx/frontend-platform';
 import { useModel } from '../../../generic/model-store';
 import { COURSE_EXIT_MODES, getCourseExitMode } from '../../../courseware/course/course-exit/utils';
-import { DashboardLink, IdVerificationSupportLink, ProfileLink } from '../../../shared/links';
+import { IdVerificationSupportLink } from '../../../shared/links';
 import { requestCert } from '../../data/thunks';
 import messages from './messages';
 
@@ -82,9 +82,20 @@ const CertificateStatus = ({ intl }) => {
     gradeEventName = Object.entries(gradeRange).length > 1 ? 'passing_grades' : 'passing';
   }
 
-  const dashboardLink = <DashboardLink />;
   const idVerificationSupportLink = <IdVerificationSupportLink />;
-  const profileLink = <ProfileLink />;
+  const certificatesHelpLink = (
+    <Hyperlink
+      variant="muted"
+      isInline
+      destination="https://eshemoeasu.my.site.com/help/s/article/Learn-about-printing-saving-or-sharing-your-certificate"
+    >
+      <FormattedMessage
+        id="progress.certificateStatus.certificatesHelpLink"
+        defaultMessage="Learn about printing, saving, or sharing your certificate."
+        description="Redirects learners to Certificate Help docs"
+      />
+    </Hyperlink>
+  );
 
   // Some learners have a valid ("downloadable") certificate without being in a passing
   // state (e.g. learners who have been added to a course's allowlist), so we need to
@@ -133,12 +144,9 @@ const CertificateStatus = ({ intl }) => {
         body = (
           <FormattedMessage
             id="progress.certificateStatus.downloadableBody"
-            defaultMessage="
-              Showcase your accomplishment on LinkedIn or your resumé today.
-              You can download your certificate now and access it any time from your
-              {dashboardLink} and {profileLink}."
+            defaultMessage="Showcase your accomplishment. {certificatesHelpLink}"
             description="Recommending an action for learner when course certificate is available"
-            values={{ dashboardLink, profileLink }}
+            values={{ certificatesHelpLink }}
           />
         );
         if (certWebViewUrl) {
