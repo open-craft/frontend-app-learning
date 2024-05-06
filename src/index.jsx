@@ -140,6 +140,7 @@ initialize({
         EXAMS_BASE_URL: process.env.EXAMS_BASE_URL || null,
         PROCTORED_EXAM_FAQ_URL: process.env.PROCTORED_EXAM_FAQ_URL || null,
         PROCTORED_EXAM_RULES_URL: process.env.PROCTORED_EXAM_RULES_URL || null,
+        SHOW_UNGRADED_ASSIGNMENT_PROGRESS: process.env.SHOW_UNGRADED_ASSIGNMENT_PROGRESS || false,
       }, 'LearnerAppConfig');
     },
   },
