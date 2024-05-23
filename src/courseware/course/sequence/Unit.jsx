@@ -7,6 +7,7 @@ import React, {
   Suspense, useCallback, useContext, useEffect, useLayoutEffect, useState,
 } from 'react';
 import { useDispatch } from 'react-redux';
+import { throttle } from 'lodash';
 import { processEvent } from '../../../course-home/data/thunks';
 import { useEventListener } from '../../../generic/hooks';
 import { useModel } from '../../../generic/model-store';
@@ -112,6 +113,25 @@ const Unit = ({
       setShouldDisplayHonorCode(false);
     }
   }, [userNeedsIntegritySignature]);
+
+  // Send visibility status to the iframe. It's used to mark XBlocks as viewed.
+  const updateIframeVisibility = () => {
+    const iframeElement = document.getElementById('unit-iframe');
+    if (iframeElement) {
+      const rect = iframeElement.getBoundingClientRect();
+      const visibleInfo = {
+        type: 'unit.visibilityStatus',
+        data: {
+          topPosition: rect.top,
+          viewportHeight: window.innerHeight,
+        },
+      };
+      iframeElement.contentWindow.postMessage(visibleInfo, `${getConfig().LMS_BASE_URL}`);
+    }
+  };
+
+  // Throttle the update function to prevent it from sending too many messages to the iframe.
+  const throttledUpdateVisibility = throttle(updateIframeVisibility, 100);
 
   const receiveMessage = useCallback(({ data }) => {
     const {
@@ -233,6 +253,13 @@ const Unit = ({
                   dispatch(processEvent(e.data, fetchCourse));
                 }
               };
+
+              // Update the visibility of the iframe in case the element is already visible.
+              updateIframeVisibility();
+
+              // Add event listeners to update the visibility of the iframe when the window is scrolled or resized.
+              window.addEventListener('scroll', throttledUpdateVisibility);
+              window.addEventListener('resize', throttledUpdateVisibility);
             }}
           />
         </div>
