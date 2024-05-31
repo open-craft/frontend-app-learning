@@ -120,7 +120,7 @@ const Unit = ({
     if (iframeElement) {
       const rect = iframeElement.getBoundingClientRect();
       const visibleInfo = {
-        type: 'visibilityStatus',
+        type: 'unit.visibilityStatus',
         data: {
           topPosition: rect.top,
           viewportHeight: window.innerHeight,
