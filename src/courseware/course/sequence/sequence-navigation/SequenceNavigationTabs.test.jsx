@@ -1,6 +1,11 @@
 import React from 'react';
 import { Factory } from 'rosie';
-import { act, fireEvent, getAllByRole } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  getAllByRole,
+  waitFor,
+} from '@testing-library/react';
 
 import { initializeTestStore, render, screen } from '../../../../setupTest';
 import SequenceNavigationTabs from './SequenceNavigationTabs';
@@ -53,7 +58,11 @@ describe('Sequence Navigation Tabs', () => {
       const booyah = render(<SequenceNavigationTabs {...mockData} />, { wrapWithRouter: true });
       container = booyah.container;
 
-      const dropdownToggle = container.querySelector('.dropdown-toggle');
+      let dropdownToggle;
+      await waitFor(() => {
+        dropdownToggle = container.querySelector('.dropdown-toggle');
+        expect(dropdownToggle).toBeInTheDocument();
+      });
       // We need to await this click here, which requires us to await the `act` as well above.
       // https://github.com/testing-library/react-testing-library/issues/535
       // Without doing this, we get a warning about using `act` even though we are.
