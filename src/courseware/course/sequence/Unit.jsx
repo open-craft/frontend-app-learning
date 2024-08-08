@@ -1,4 +1,5 @@
 import { getConfig } from '@edx/frontend-platform';
+import { stringifyUrl } from 'query-string';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { AppContext, ErrorPage } from '@edx/frontend-platform/react';
 import { Modal } from '@edx/paragon';
@@ -7,6 +8,7 @@ import React, {
   Suspense, useCallback, useContext, useEffect, useLayoutEffect, useState,
 } from 'react';
 import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { processEvent } from '../../../course-home/data/thunks';
 /** [MM-P2P] Experiment */
 import { MMP2PLockPaywall } from '../../../experiments/mm-p2p';
@@ -86,10 +88,21 @@ function Unit({
 }) {
   const { authenticatedUser } = useContext(AppContext);
   const view = authenticatedUser ? 'student_view' : 'public_view';
-  let iframeUrl = `${getConfig().LMS_BASE_URL}/xblock/${id}?show_title=0&show_bookmark_button=0&recheck_access=1&view=${view}`;
-  if (format) {
-    iframeUrl += `&format=${format}`;
-  }
+  const { jumpToId } = useParams();
+  const iframeParams = {
+    show_title: 0,
+    show_bookmark_button: 0,
+    recheck_access: 1,
+    view,
+    ...(format && { format }),
+    jumpToId, // Pass jumpToId as query param as fragmentIdentifier is not passed to server.
+  };
+  const xblockUrl = `${getConfig().LMS_BASE_URL}/xblock/${id}`;
+  const iframeUrl = stringifyUrl({
+    url: xblockUrl,
+    query: iframeParams,
+    fragmentIdentifier: jumpToId, // this is used by browser to scroll to correct block.
+  });
 
   const [iframeHeight, setIframeHeight] = useState(0);
   const [hasLoaded, setHasLoaded] = useState(false);
