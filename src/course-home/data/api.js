@@ -136,6 +136,7 @@ export function normalizeOutlineBlocks(courseId, blocks) {
           title: block.display_name,
           resumeBlock: block.resume_block,
           sequenceIds: block.children || [],
+          optionalCompletion: block.optional_completion,
         };
         break;
 
@@ -152,6 +153,7 @@ export function normalizeOutlineBlocks(courseId, blocks) {
           // link in the outline (even though we ignore the given url and use an internal <Link> to ourselves).
           showLink: !!block.lms_web_url,
           title: block.display_name,
+          optionalCompletion: block.optional_completion,
         };
         break;
 

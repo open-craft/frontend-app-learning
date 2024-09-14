@@ -99,6 +99,11 @@ const messages = defineMessages({
     defaultMessage: 'Open',
     description: 'A button to open the given section of the course outline',
   },
+  optionalCompletion: {
+    id: 'learning.outline.optionalBlock',
+    defaultMessage: 'Optional',
+    description: 'Used as a label to indicate that a section or sequence is optional.',
+  },
   proctoringInfoPanel: {
     id: 'learning.proctoringPanel.header',
     defaultMessage: 'This course contains proctored exams',
