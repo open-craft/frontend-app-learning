@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { breakpoints, useWindowSize } from '@edx/paragon';
 
+import { getAuthenticatedHttpClient, getAuthenticatedUser } from '@edx/frontend-platform/auth';
+import { getConfig } from '@edx/frontend-platform';
 import CertificateStatus from './certificate-status/CertificateStatus';
 import CourseCompletion from './course-completion/CourseCompletion';
 import CourseGrade from './grades/course-grade/CourseGrade';
@@ -22,6 +24,18 @@ const ProgressTab = () => {
   } = useModel('progress', courseId);
 
   const applyLockedOverlay = gradesFeatureIsFullyLocked ? 'locked-overlay' : '';
+  const [visibility, setVisibility] = useState({});
+  // To maintain compatibility eith
+  const isVisible = (component) => visibility?.[`show${component}`] ?? true;
+  useEffect(async () => {
+    const authenticatedUser = getAuthenticatedUser();
+    const url = new URL(`${getConfig().LMS_BASE_URL}/api/courses/v2/blocks/`);
+    url.searchParams.append('course_id', courseId);
+    url.searchParams.append('username', authenticatedUser ? authenticatedUser.username : '');
+    url.searchParams.append('requested_fields', 'other_course_settings');
+    const { data } = await getAuthenticatedHttpClient().get(url.href, {});
+    setVisibility(data.blocks[data.root]?.other_course_settings?.progressPage ?? {});
+  }, [courseId]);
 
   const windowWidth = useWindowSize().width;
   if (windowWidth === undefined) {
@@ -39,18 +53,18 @@ const ProgressTab = () => {
         {/* Main body */}
         <div className="col-12 col-md-8 p-0">
           <CourseCompletion />
-          {!wideScreen && <CertificateStatus />}
-          <CourseGrade />
+          {!wideScreen && isVisible('CertificateStatus') && <CertificateStatus />}
+          {isVisible('Grades') && <CourseGrade />}
           <div className={`grades my-4 p-4 rounded raised-card ${applyLockedOverlay}`} aria-hidden={gradesFeatureIsFullyLocked}>
-            <GradeSummary />
-            <DetailedGrades />
+            {isVisible('GradeSummary') && <GradeSummary />}
+            {isVisible('GradeSummary') && <DetailedGrades />}
           </div>
         </div>
 
         {/* Side panel */}
         <div className="col-12 col-md-4 p-0 px-md-4">
-          {wideScreen && <CertificateStatus />}
-          <RelatedLinks />
+          {wideScreen && isVisible('CertificateStatus') && <CertificateStatus />}
+          {isVisible('RelatedLinks') && <RelatedLinks />}
         </div>
       </div>
     </>
