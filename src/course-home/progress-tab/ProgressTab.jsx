@@ -25,8 +25,11 @@ const ProgressTab = () => {
 
   const applyLockedOverlay = gradesFeatureIsFullyLocked ? 'locked-overlay' : '';
   const [visibility, setVisibility] = useState({});
-  // To maintain compatibility eith
-  const isVisible = (component) => visibility?.[`show${component}`] ?? true;
+  const [isLoaded, setIsLoaded] = useState(false);
+  // If the visibility is undefined before loading is complete, then hide the component,
+  // however if it's still false after loading is complete that means the visibility just
+  // isn't configured, in which case default to being visible.
+  const isVisible = (component) => visibility?.[`show${component}`] ?? isLoaded;
   useEffect(async () => {
     const authenticatedUser = getAuthenticatedUser();
     const url = new URL(`${getConfig().LMS_BASE_URL}/api/courses/v2/blocks/`);
@@ -35,6 +38,7 @@ const ProgressTab = () => {
     url.searchParams.append('requested_fields', 'other_course_settings');
     const { data } = await getAuthenticatedHttpClient().get(url.href, {});
     setVisibility(data.blocks[data.root]?.other_course_settings?.progressPage ?? {});
+    setIsLoaded(true);
   }, [courseId]);
 
   const windowWidth = useWindowSize().width;
