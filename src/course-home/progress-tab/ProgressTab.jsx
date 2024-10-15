@@ -59,10 +59,12 @@ const ProgressTab = () => {
           <CourseCompletion />
           {!wideScreen && isVisible('CertificateStatus') && <CertificateStatus />}
           {isVisible('Grades') && <CourseGrade />}
-          <div className={`grades my-4 p-4 rounded raised-card ${applyLockedOverlay}`} aria-hidden={gradesFeatureIsFullyLocked}>
-            {isVisible('GradeSummary') && <GradeSummary />}
-            {isVisible('GradeSummary') && <DetailedGrades />}
-          </div>
+          {isVisible('GradeBreakdown') && (
+            <div className={`grades my-4 p-4 rounded raised-card ${applyLockedOverlay}`} aria-hidden={gradesFeatureIsFullyLocked}>
+              <GradeSummary />
+              <DetailedGrades />
+            </div>
+          )}
         </div>
 
         {/* Side panel */}
