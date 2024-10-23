@@ -7,8 +7,7 @@ import ProgressHeader from './ProgressHeader';
 
 import ProgressTabCertificateStatusSlot from '../../plugin-slots/ProgressTabCertificateStatusSlot';
 import ProgressTabCourseGradeSlot from '../../plugin-slots/ProgressTabCourseGradeSlot';
-import ProgressTabDetailedGradesSlot from '../../plugin-slots/ProgressTabDetailedGradesSlot';
-import ProgressTabGradeSummarySlot from '../../plugin-slots/ProgressTabGradeSummarySlot';
+import ProgressTabGradeBreakdownSlot from '../../plugin-slots/ProgressTabGradeBreakdownSlot';
 import ProgressTabRelatedLinksSlot from '../../plugin-slots/ProgressTabRelatedLinksSlot';
 import { useModel } from '../../generic/model-store';
 
@@ -17,11 +16,7 @@ const ProgressTab = () => {
     courseId,
   } = useSelector(state => state.courseHome);
 
-  const {
-    gradesFeatureIsFullyLocked, disableProgressGraph,
-  } = useModel('progress', courseId);
-
-  const applyLockedOverlay = gradesFeatureIsFullyLocked ? 'locked-overlay' : '';
+  const { disableProgressGraph } = useModel('progress', courseId);
 
   const windowWidth = useWindowSize().width;
   if (windowWidth === undefined) {
@@ -41,10 +36,7 @@ const ProgressTab = () => {
           {!disableProgressGraph && <CourseCompletion />}
           {!wideScreen && <ProgressTabCertificateStatusSlot courseId={courseId} />}
           <ProgressTabCourseGradeSlot courseId={courseId} />
-          <div className={`grades my-4 p-4 rounded raised-card ${applyLockedOverlay}`} aria-hidden={gradesFeatureIsFullyLocked}>
-            <ProgressTabGradeSummarySlot courseId={courseId} />
-            <ProgressTabDetailedGradesSlot courseId={courseId} />
-          </div>
+          <ProgressTabGradeBreakdownSlot courseId={courseId} />
         </div>
 
         {/* Side panel */}
