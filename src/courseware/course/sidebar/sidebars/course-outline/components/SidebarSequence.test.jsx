@@ -8,6 +8,8 @@ import courseOutlineMessages from '@src/course-home/outline-tab/messages';
 import { initializeMockApp, initializeTestStore } from '@src/setupTest';
 import messages from '../messages';
 import SidebarSequence from './SidebarSequence';
+import SidebarContext from '../../../SidebarContext';
+import { ID } from '../constants';
 
 initializeMockApp();
 
@@ -29,18 +31,27 @@ describe('<SidebarSequence />', () => {
     unit = state.courseware.courseOutline.units[unitId];
   };
 
-  function renderWithProvider(props = {}) {
+  // A default context for desktop mode.
+  const defaultSidebarContext = {
+    toggleSidebar: jest.fn(),
+    shouldDisplayFullScreen: false,
+    currentSidebar: ID,
+  };
+
+  function renderWithProvider(props = {}, sidebarContext = defaultSidebarContext) {
     const { container } = render(
       <AppProvider store={store} wrapWithRouter={false}>
         <IntlProvider locale="en">
           <MemoryRouter>
-            <SidebarSequence
-              courseId={courseId}
-              defaultOpen={false}
-              sequence={sequence}
-              activeUnitId={sequence.unitIds[0]}
-              {...props}
-            />
+            <SidebarContext.Provider value={sidebarContext}>
+              <SidebarSequence
+                courseId={courseId}
+                defaultOpen={false}
+                sequence={sequence}
+                activeUnitId={sequence.unitIds[0]}
+                {...props}
+              />
+            </SidebarContext.Provider>
           </MemoryRouter>
         </IntlProvider>
       </AppProvider>,
