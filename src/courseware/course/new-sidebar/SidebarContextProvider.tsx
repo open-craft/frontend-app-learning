@@ -2,8 +2,6 @@ import React, {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
 
-import isEmpty from 'lodash/isEmpty';
-
 import { breakpoints, useWindowSize } from '@openedx/paragon';
 
 import { getLocalStorage, setLocalStorage } from '../../../data/localStorage';
@@ -46,7 +44,7 @@ const SidebarProvider: React.FC<Props> = ({
     getLocalStorage(`upgradeNotificationCurrentState.${courseId}`),
   );
   const isDiscussionbarAvailable = (topic?.id && topic?.enabledInContext) || false;
-  const isNotificationbarAvailable = !isEmpty(verifiedMode);
+  const isNotificationbarAvailable = Object.keys(verifiedMode).length > 0;
 
   const onNotificationSeen = useCallback(() => {
     setNotificationStatus('inactive');

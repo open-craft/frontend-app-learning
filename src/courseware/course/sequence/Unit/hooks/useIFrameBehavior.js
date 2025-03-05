@@ -2,7 +2,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { throttle } from 'lodash';
+import { throttle } from 'lodash.throttle';
 
 import { StrictDict, useKeyedState } from '@edx/react-unit-test-utils';
 import { logError } from '@edx/frontend-platform/logging';

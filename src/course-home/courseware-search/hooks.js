@@ -1,7 +1,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { debounce } from 'lodash';
+import { debounce } from 'lodash.throttle';
 import { fetchCoursewareSearchSettings } from '../data/thunks';
 
 const DEBOUNCE_WAIT = 100; // ms
