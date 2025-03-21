@@ -1,17 +1,30 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
+import { PluginSlot } from '@openedx/frontend-plugin-framework';
 import classNames from 'classnames';
-
-import messages from './messages';
-import Tabs from '../generic/tabs/Tabs';
+import React from 'react';
 import { CoursewareSearch, CoursewareSearchToggle } from '../course-home/courseware-search';
 import { useCoursewareSearchState } from '../course-home/courseware-search/hooks';
+import Tabs from '../generic/tabs/Tabs';
+
+import messages from './messages';
+
+interface CourseTabsNavigationProps {
+  activeTabSlug?: string;
+  className?: string | null;
+  tabs: Array<{
+    title: string;
+    slug: string;
+    url: string;
+  }>;
+}
 
 const CourseTabsNavigation = ({
-  activeTabSlug, className, tabs, intl,
-}) => {
+  activeTabSlug = undefined,
+  className = null,
+  tabs,
+}:CourseTabsNavigationProps) => {
   const { show } = useCoursewareSearchState();
+  const intl = useIntl();
 
   return (
     <div id="courseTabsNavigation" className={classNames('course-tabs-navigation', className)}>
@@ -20,7 +33,7 @@ const CourseTabsNavigation = ({
           className="nav-underline-tabs"
           aria-label={intl.formatMessage(messages.courseMaterial)}
         >
-          {tabs.map(({ url, title, slug }) => (
+          <PluginSlot id="course_tab_links_slot">{tabs.map(({ url, title, slug }) => (
             <a
               key={slug}
               className={classNames('nav-item flex-shrink-0 nav-link', { active: slug === activeTabSlug })}
@@ -28,7 +41,7 @@ const CourseTabsNavigation = ({
             >
               {title}
             </a>
-          ))}
+          ))}</PluginSlot>
         </Tabs>
       </div>
       <div className="course-tabs-navigation__search-toggle">
@@ -39,20 +52,4 @@ const CourseTabsNavigation = ({
   );
 };
 
-CourseTabsNavigation.propTypes = {
-  activeTabSlug: PropTypes.string,
-  className: PropTypes.string,
-  tabs: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    slug: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-  })).isRequired,
-  intl: intlShape.isRequired,
-};
-
-CourseTabsNavigation.defaultProps = {
-  activeTabSlug: undefined,
-  className: null,
-};
-
-export default injectIntl(CourseTabsNavigation);
+export default CourseTabsNavigation;
