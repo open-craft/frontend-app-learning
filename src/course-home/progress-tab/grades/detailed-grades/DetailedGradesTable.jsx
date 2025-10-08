@@ -20,6 +20,9 @@ const DetailedGradesTable = ({ intl }) => {
     sectionScores,
   } = useModel('progress', courseId);
 
+  const { course, isMasquerading } = useModel('courseHomeMeta', courseId);
+  const isStaff = course?.isStaff;
+
   const isLocaleRtl = isRtl(getLocale());
   const showUngradedAssignments = (
     getConfig().SHOW_UNGRADED_ASSIGNMENT_PROGRESS === 'true'
@@ -30,7 +33,6 @@ const DetailedGradesTable = ({ intl }) => {
       const subsectionScores = chapter.subsections.filter(
         (subsection) => !!(
           (showUngradedAssignments || subsection.hasGradedAssignment)
-            && subsection.showGrades
             && (subsection.numPointsPossible > 0 || subsection.numPointsEarned > 0)
         ),
       );
@@ -39,10 +41,34 @@ const DetailedGradesTable = ({ intl }) => {
         return null;
       }
 
-      const detailedGradesData = subsectionScores.map((subsection) => ({
-        subsectionTitle: <SubsectionTitleCell subsection={subsection} />,
-        score: <span className={subsection.learnerHasAccess ? '' : 'greyed-out'}>{subsection.numPointsEarned}{isLocaleRtl ? '\\' : '/'}{subsection.numPointsPossible}</span>,
-      }));
+      const detailedGradesData = subsectionScores.map((subsection) => {
+        let scoreDisplay;
+
+        if (subsection.showCorrectness === 'never') {
+          scoreDisplay = 'This score is hidden.';
+        } else if (
+          !isStaff && !isMasquerading
+          && (subsection.showCorrectness === 'past_due' || subsection.showCorrectness === 'never_but_include_grade')
+          && Date.parse(subsection.due) > Date.now()
+        ) {
+          const formattedDate = intl.formatDate(new Date(subsection.due), {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            timeZoneName: 'short',
+          });
+          scoreDisplay = `Score will appear at ${formattedDate}`;
+        } else {
+          scoreDisplay = `${subsection.numPointsEarned}${isLocaleRtl ? '\\' : '/'}${subsection.numPointsPossible}`;
+        }
+
+        return {
+          subsectionTitle: <SubsectionTitleCell subsection={subsection} />,
+          score: <span className={subsection.learnerHasAccess ? '' : 'greyed-out'}>{scoreDisplay}</span>,
+        };
+      });
 
       return (
         <div className="my-3" key={`${chapter.displayName}-grades-table`}>

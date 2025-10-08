@@ -45,14 +45,16 @@ const SubsectionTitleCell = ({ intl, subsection }) => {
   return (
     <Collapsible.Advanced>
       <Row className="w-100 m-0">
-        <Collapsible.Trigger
-          className="mr-1 position-absolute"
-          aria-label={intl.formatMessage(messages.problemScoreToggleAltText, { subsectionTitle: displayName })}
-          tabIndex={gradesFeatureIsFullyLocked ? '-1' : '0'}
-        >
-          <Collapsible.Visible whenClosed><Icon src={ArrowDropDown} /></Collapsible.Visible>
-          <Collapsible.Visible whenOpen><Icon src={ArrowDropUp} /></Collapsible.Visible>
-        </Collapsible.Trigger>
+        {problemScores && problemScores.length > 0 && (
+          <Collapsible.Trigger
+            className="mr-1 position-absolute"
+            aria-label={intl.formatMessage(messages.problemScoreToggleAltText, { subsectionTitle: displayName })}
+            tabIndex={gradesFeatureIsFullyLocked ? '-1' : '0'}
+          >
+            <Collapsible.Visible whenClosed><Icon src={ArrowDropDown} /></Collapsible.Visible>
+            <Collapsible.Visible whenOpen><Icon src={ArrowDropUp} /></Collapsible.Visible>
+          </Collapsible.Trigger>
+        )}
         <span className="small d-inline ml-4 pl-1">
           {gradesFeatureIsFullyLocked || subsection.learnerHasAccess ? ''
             : (
