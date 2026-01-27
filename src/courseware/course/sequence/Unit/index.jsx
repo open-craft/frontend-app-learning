@@ -29,6 +29,7 @@ const Unit = ({
   const unit = useModel(modelKeys.units, id);
   const isProcessing = unit.bookmarkedUpdateState === 'loading';
   const view = authenticatedUser ? views.student : views.public;
+  const { optionalCompletion } = unit;
 
   const getUrl = usePluginsCallback('getIFrameUrl', () => getIFrameUrl({
     id,
@@ -51,6 +52,11 @@ const Unit = ({
         isBookmarked={unit.bookmarked}
         isProcessing={isProcessing}
       />
+      {optionalCompletion && (
+        <div className="alert alert-info small my-3" role="alert" data-testid="optional-completion-unit-alert">
+          {formatMessage(messages.optionalCompletionUnitAlert)}
+        </div>
+      )}
       <UnitSuspense {...{ courseId, id }} />
       <ContentIFrame
         elementId="unit-iframe"

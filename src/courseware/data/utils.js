@@ -145,6 +145,7 @@ export function normalizeSequenceMetadata(sequence) {
       contentType: unit.type,
       graded: unit.graded,
       containsContentTypeGatedContent: unit.contains_content_type_gated_content,
+      optionalCompletion: unit.optional_completion,
     })),
   };
 }
@@ -173,6 +174,7 @@ export function normalizeOutlineBlocks(courseId, blocks) {
             completed: block.completion_stat?.completion,
             total: block.completion_stat?.completable_children,
           },
+          optionalCompletion: block.optional_completion || false,
         };
         break;
 
@@ -189,6 +191,7 @@ export function normalizeOutlineBlocks(courseId, blocks) {
             completed: block.completion_stat?.completion,
             total: block.completion_stat?.completable_children,
           },
+          optionalCompletion: block.optional_completion || false,
         };
         break;
 
@@ -199,6 +202,7 @@ export function normalizeOutlineBlocks(courseId, blocks) {
           id: block.id,
           title: block.display_name,
           type: block.type,
+          optionalCompletion: block.optional_completion || false,
         };
         break;
 
