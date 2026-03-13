@@ -4,7 +4,12 @@ const messages = defineMessages({
   donutLabel: {
     id: 'progress.completion.donut.label',
     defaultMessage: 'completed',
-    description: 'Label text for progress donut chart',
+    description: 'Label text for progress donut chart when only one donut is shown',
+  },
+  requiredDonutLabel: {
+    id: 'progress.completion.requiredDonut.label',
+    defaultMessage: 'required',
+    description: 'Label text for required progress donut chart when optional content is present',
   },
   optionalDonutLabel: {
     id: 'progress.completion.optionalDonut.label',

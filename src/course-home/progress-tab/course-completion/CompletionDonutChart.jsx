@@ -16,8 +16,6 @@ const CompletionDonutChart = ({ intl, optional = false }) => {
     courseId,
   } = useSelector(state => state.courseHome);
 
-  const label = optional ? intl.formatMessage(messages.optionalDonutLabel) : intl.formatMessage(messages.donutLabel);
-
   const progress = useModel('progress', courseId);
   const completionSummary = progress?.completionSummary || {};
   const completeCount = optional ? completionSummary.optionalCompleteCount : completionSummary.completeCount;
@@ -33,6 +31,21 @@ const CompletionDonutChart = ({ intl, optional = false }) => {
 
   if (optional && numTotalUnits === 0) {
     return <></>;
+  }
+
+  const optionalTotalUnits = (
+    completionSummary.optionalCompleteCount
+    + completionSummary.optionalIncompleteCount
+    + completionSummary.optionalLockedCount
+  );
+
+  let label;
+  if (optional) {
+    label = intl.formatMessage(messages.optionalDonutLabel);
+  } else if (optionalTotalUnits > 0) {
+    label = intl.formatMessage(messages.requiredDonutLabel);
+  } else {
+    label = intl.formatMessage(messages.donutLabel);
   }
 
   return (

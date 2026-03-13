@@ -86,7 +86,7 @@ const Section = ({
       </div>
       )}
       {optionalCompletion && (
-        <Badge className="align-self-center text-uppercase border" variant="light" data-testid="optional-completion-badge-outline-section">
+        <Badge className="align-self-center text-uppercase pt-1 border" variant="light" data-testid="optional-completion-badge-outline-section">
           {intl.formatMessage(messages.optionalCompletion)}
         </Badge>
       )}

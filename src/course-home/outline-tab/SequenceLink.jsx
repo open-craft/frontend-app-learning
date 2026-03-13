@@ -116,7 +116,7 @@ const SequenceLink = ({
             </span>
             <EffortEstimate className="ml-3 align-middle" block={sequence} />
             {optionalCompletion && (
-              <Badge className="align-self-center text-uppercase mr-5 border" variant="light" data-testid="optional-completion-badge-outline-subsection">
+              <Badge className="align-self-center text-uppercase mr-5 pt-1 border" variant="light" data-testid="optional-completion-badge-outline-subsection">
                 {intl.formatMessage(messages.optionalCompletion)}
               </Badge>
             )}
