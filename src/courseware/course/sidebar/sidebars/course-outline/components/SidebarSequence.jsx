@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Collapsible } from '@openedx/paragon';
+import { Badge, Collapsible } from '@openedx/paragon';
 
 import courseOutlineMessages from '@src/course-home/outline-tab/messages';
 import { getCourseOutline, getSequenceId } from '@src/courseware/data/selectors';
@@ -26,6 +26,7 @@ const SidebarSequence = ({
     unitIds,
     type,
     completionStat,
+    optionalCompletion,
   } = sequence;
 
   const [open, setOpen] = useState(defaultOpen);
@@ -38,8 +39,15 @@ const SidebarSequence = ({
       <div className="col-auto p-0" style={{ fontSize: '1.1rem' }}>
         <CompletionIcon completionStat={completionStat} />
       </div>
-      <div className="col-9 d-flex flex-column flex-grow-1 ml-3 mr-auto p-0 text-left">
-        <span className="align-middle text-dark-500">{title}</span>
+      <div className="col-10 d-flex flex-column flex-grow-1 ml-3 mr-auto p-0 text-left">
+        <span className="d-flex justify-content-between align-middle text-dark-500">
+          {title}
+          {optionalCompletion && (
+            <Badge className="align-self-center text-uppercase border" variant="light" data-testid="optional-completion-badge-sidebar-sequence">
+              {intl.formatMessage(courseOutlineMessages.optionalCompletion)}
+            </Badge>
+          )}
+        </span>
         {specialExamInfo && <span className="align-middle small text-muted">{specialExamInfo}</span>}
         <span className="sr-only">
           , {intl.formatMessage(complete
@@ -94,6 +102,7 @@ SidebarSequence.propTypes = {
       completed: PropTypes.number,
       total: PropTypes.number,
     }),
+    optionalCompletion: PropTypes.bool,
   }).isRequired,
   activeUnitId: PropTypes.string.isRequired,
 };

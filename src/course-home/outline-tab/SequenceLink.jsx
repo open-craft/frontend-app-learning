@@ -11,7 +11,7 @@ import { faCheckCircle as fasCheckCircle } from '@fortawesome/free-solid-svg-ico
 import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { Icon } from '@openedx/paragon';
+import { Badge, Icon } from '@openedx/paragon';
 import { Block } from '@openedx/paragon/icons';
 import EffortEstimate from '../../shared/effort-estimate';
 import { useModel } from '../../generic/model-store';
@@ -31,6 +31,7 @@ const SequenceLink = ({
     showLink,
     title,
     hideFromTOC,
+    optionalCompletion,
   } = sequence;
   const {
     userTimezone,
@@ -108,12 +109,17 @@ const SequenceLink = ({
               />
             )}
           </div>
-          <div className="col-10 p-0 ml-3 text-break">
+          <div className="d-flex justify-content-between col-11 p-0 ml-3 text-break">
             <span className="align-middle">{displayTitle}</span>
             <span className="sr-only">
               , {intl.formatMessage(complete ? messages.completedAssignment : messages.incompleteAssignment)}
             </span>
             <EffortEstimate className="ml-3 align-middle" block={sequence} />
+            {optionalCompletion && (
+              <Badge className="align-self-center text-uppercase mr-5 pt-1 border" variant="light" data-testid="optional-completion-badge-outline-subsection">
+                {intl.formatMessage(messages.optionalCompletion)}
+              </Badge>
+            )}
           </div>
         </div>
         {hideFromTOC && (

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import {
   getLocale, injectIntl, intlShape, isRtl,
 } from '@edx/frontend-platform/i18n';
+import PropTypes from 'prop-types';
 import { useModel } from '../../../generic/model-store';
 
 import CompleteDonutSegment from './CompleteDonutSegment';
@@ -10,18 +11,16 @@ import IncompleteDonutSegment from './IncompleteDonutSegment';
 import LockedDonutSegment from './LockedDonutSegment';
 import messages from './messages';
 
-const CompletionDonutChart = ({ intl }) => {
+const CompletionDonutChart = ({ intl, optional = false }) => {
   const {
     courseId,
   } = useSelector(state => state.courseHome);
 
-  const {
-    completionSummary: {
-      completeCount,
-      incompleteCount,
-      lockedCount,
-    },
-  } = useModel('progress', courseId);
+  const progress = useModel('progress', courseId);
+  const completionSummary = progress?.completionSummary || {};
+  const completeCount = optional ? completionSummary.optionalCompleteCount : completionSummary.completeCount;
+  const incompleteCount = optional ? completionSummary.optionalIncompleteCount : completionSummary.incompleteCount;
+  const lockedCount = optional ? completionSummary.optionalLockedCount : completionSummary.lockedCount;
 
   const numTotalUnits = completeCount + incompleteCount + lockedCount;
   const completePercentage = completeCount ? Number(((completeCount / numTotalUnits) * 100).toFixed(0)) : 0;
@@ -29,6 +28,25 @@ const CompletionDonutChart = ({ intl }) => {
   const incompletePercentage = 100 - completePercentage - lockedPercentage;
 
   const isLocaleRtl = isRtl(getLocale());
+
+  if (optional && numTotalUnits === 0) {
+    return <></>;
+  }
+
+  const optionalTotalUnits = (
+    completionSummary.optionalCompleteCount
+    + completionSummary.optionalIncompleteCount
+    + completionSummary.optionalLockedCount
+  );
+
+  let label;
+  if (optional) {
+    label = intl.formatMessage(messages.optionalDonutLabel);
+  } else if (optionalTotalUnits > 0) {
+    label = intl.formatMessage(messages.requiredDonutLabel);
+  } else {
+    label = intl.formatMessage(messages.donutLabel);
+  }
 
   return (
     <>
@@ -42,7 +60,7 @@ const CompletionDonutChart = ({ intl }) => {
             {completePercentage}{isLocaleRtl && '\u200f'}%
           </text>
           <text x="50%" y="50%" className="donut-chart-label">
-            {intl.formatMessage(messages.donutLabel)}
+            {label}
           </text>
         </g>
         <IncompleteDonutSegment incompletePercentage={incompletePercentage} />
@@ -62,8 +80,13 @@ const CompletionDonutChart = ({ intl }) => {
   );
 };
 
+CompletionDonutChart.defaultProps = {
+  optional: false,
+};
+
 CompletionDonutChart.propTypes = {
   intl: intlShape.isRequired,
+  optional: PropTypes.bool,
 };
 
 export default injectIntl(CompletionDonutChart);

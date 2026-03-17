@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Button, Icon } from '@openedx/paragon';
+import { Badge, Button, Icon } from '@openedx/paragon';
 import { ChevronRight as ChevronRightIcon } from '@openedx/paragon/icons';
 
 import courseOutlineMessages from '@src/course-home/outline-tab/messages';
@@ -16,6 +16,7 @@ const SidebarSection = ({ intl, section, handleSelectSection }) => {
     title,
     sequenceIds,
     completionStat,
+    optionalCompletion,
   } = section;
 
   const activeSequenceId = useSelector(getSequenceId);
@@ -26,13 +27,18 @@ const SidebarSection = ({ intl, section, handleSelectSection }) => {
       <div className="col-auto p-0">
         <CompletionIcon completionStat={completionStat} />
       </div>
-      <div className="col-10 ml-3 p-0 flex-grow-1 text-dark-500 text-left text-break">
+      <div className="d-flex justify-content-between col-10 ml-3 p-0 flex-grow-1 text-dark-500 text-left text-break">
         {title}
         <span className="sr-only">
           , {intl.formatMessage(complete
           ? courseOutlineMessages.completedSection
           : courseOutlineMessages.incompleteSection)}
         </span>
+        {optionalCompletion && (
+          <Badge className="align-self-center text-uppercase border" variant="light" data-testid="optional-completion-badge-sidebar-section">
+            {intl.formatMessage(courseOutlineMessages.optionalCompletion)}
+          </Badge>
+        )}
       </div>
     </>
   );
@@ -65,6 +71,7 @@ SidebarSection.propTypes = {
       completed: PropTypes.number,
       total: PropTypes.number,
     }),
+    optionalCompletion: PropTypes.bool,
   }).isRequired,
   handleSelectSection: PropTypes.func.isRequired,
 };

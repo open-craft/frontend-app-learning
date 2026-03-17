@@ -26,6 +26,11 @@ const messages = defineMessages({
     defaultMessage: 'Incomplete unit',
     description: 'Text used to describe the gray checkmark icon in front of a unit title',
   },
+  optionalCompletion: {
+    id: 'learn.sequence.optionalBlock',
+    defaultMessage: 'Optional',
+    description: 'Used as a label to indicate that a unit is optional.',
+  },
 });
 
 export default messages;

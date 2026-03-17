@@ -31,6 +31,11 @@ const messages = defineMessages({
     defaultMessage: 'There is no content here.',
     description: 'Message shown when there is no content to show a user inside a learning sequence.',
   },
+  optionalCompletionUnitAlert: {
+    id: 'learn.optionalCompletionUnitAlert',
+    defaultMessage: 'This is optional content and will not affect your course score or completion.',
+    description: 'Alert message shown in a unit when the unit has optional completion.',
+  },
 });
 
 export default messages;
