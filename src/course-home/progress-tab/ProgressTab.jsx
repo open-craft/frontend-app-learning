@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { breakpoints, useWindowSize } from '@openedx/paragon';
+import { useWindowSize } from '@openedx/paragon';
 
 import CourseCompletion from './course-completion/CourseCompletion';
 import ProgressHeader from './ProgressHeader';
@@ -26,7 +26,6 @@ const ProgressTab = () => {
     return null;
   }
 
-  const wideScreen = windowWidth >= breakpoints.large.minWidth;
   return (
     <>
       <ProgressHeader />
@@ -34,14 +33,13 @@ const ProgressTab = () => {
         {/* Main body */}
         <div className="col-12 col-md-8 p-0">
           {!disableProgressGraph && <CourseCompletion />}
-          {!wideScreen && <ProgressTabCertificateStatusSlot courseId={courseId} />}
+          <ProgressTabCertificateStatusSlot courseId={courseId} />
           <ProgressTabCourseGradeSlot courseId={courseId} />
           <ProgressTabGradeBreakdownSlot courseId={courseId} />
         </div>
 
         {/* Side panel */}
         <div className="col-12 col-md-4 p-0 px-md-4">
-          {wideScreen && <ProgressTabCertificateStatusSlot courseId={courseId} />}
           <ProgressTabRelatedLinksSlot courseId={courseId} />
         </div>
       </div>
