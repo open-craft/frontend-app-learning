@@ -23,8 +23,8 @@ const CompletionDonutChart = ({ intl, optional = false }) => {
   const lockedCount = optional ? completionSummary.optionalLockedCount : completionSummary.lockedCount;
 
   const numTotalUnits = completeCount + incompleteCount + lockedCount;
-  const completePercentage = completeCount ? Number(((completeCount / numTotalUnits) * 100).toFixed(0)) : 0;
-  const lockedPercentage = lockedCount ? Number(((lockedCount / numTotalUnits) * 100).toFixed(0)) : 0;
+  const completePercentage = completeCount ? Number(((completeCount / numTotalUnits) * 100).toFixed(1)) : 0;
+  const lockedPercentage = lockedCount ? Number(((lockedCount / numTotalUnits) * 100).toFixed(1)) : 0;
   const incompletePercentage = 100 - completePercentage - lockedPercentage;
 
   const isLocaleRtl = isRtl(getLocale());
