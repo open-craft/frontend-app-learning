@@ -21,10 +21,8 @@ import {
 } from '@src/courseware/data/selectors';
 import { ID } from './constants';
 
-// eslint-disable-next-line import/prefer-default-export
-export const useCourseOutlineSidebar = () => {
+export const useCourseOutlineData = () => {
   const dispatch = useDispatch();
-  const isCollapsedOutlineSidebar = window.sessionStorage.getItem('hideCourseOutlineSidebar');
   const {
     enableCompletionTracking: isEnabledCompletionTracking,
   } = useSelector(getCoursewareOutlineSidebarSettings);
@@ -36,40 +34,12 @@ export const useCourseOutlineSidebar = () => {
 
   const { courseId } = useParams();
   const course = useModel('coursewareMeta', courseId);
-  const { isNewDiscussionSidebarViewEnabled } = useModel('courseHomeMeta', courseId);
-  const SidebarContext = isNewDiscussionSidebarViewEnabled ? NewSidebarContext : OldSidebarContext;
-
-  const {
-    unitId,
-    initialSidebar,
-    currentSidebar,
-    toggleSidebar,
-    shouldDisplayFullScreen,
-  } = useContext(SidebarContext);
-
-  const isOpenSidebar = !initialSidebar && !isCollapsedOutlineSidebar;
-  const [isOpen, setIsOpen] = useState(true);
 
   const {
     entranceExamEnabled,
     entranceExamPassed,
   } = course.entranceExamData || {};
   const isActiveEntranceExam = entranceExamEnabled && !entranceExamPassed;
-
-  const collapseSidebar = () => {
-    toggleSidebar(null);
-    window.sessionStorage.setItem('hideCourseOutlineSidebar', 'true');
-  };
-
-  const handleToggleCollapse = () => {
-    if (currentSidebar === ID) {
-      collapseSidebar();
-    } else {
-      toggleSidebar(ID);
-      window.sessionStorage.removeItem('hideCourseOutlineSidebar');
-      window.sessionStorage.setItem(`notificationTrayStatus.${courseId}`, 'closed');
-    }
-  };
 
   const handleUnitClick = ({ sequenceId, activeUnitId, id }) => {
     const logEvent = (eventName, widgetPlacement) => {
@@ -95,24 +65,65 @@ export const useCourseOutlineSidebar = () => {
 
     logEvent('edx.ui.lms.sequence.tab_selected', 'left');
     dispatch(checkBlockCompletion(courseId, sequenceId, activeUnitId));
-
-    // Hide the sidebar after selecting a unit on a mobile device.
-    if (shouldDisplayFullScreen) {
-      handleToggleCollapse();
-    }
   };
-
-  useEffect(() => {
-    if (isOpenSidebar && currentSidebar !== ID) {
-      toggleSidebar(ID);
-    }
-  }, [initialSidebar, unitId]);
 
   useEffect(() => {
     if (courseOutlineStatus !== LOADED || courseOutlineShouldUpdate) {
       dispatch(getCourseOutlineStructure(courseId));
     }
   }, [courseId, courseOutlineShouldUpdate]);
+
+  return {
+    isEnabledCompletionTracking,
+    isActiveEntranceExam,
+    courseOutlineStatus,
+    activeSequenceId,
+    sections,
+    sequences,
+    units,
+    handleUnitClick,
+    sequenceStatus,
+  };
+};
+
+export const useCourseOutlineSidebar = () => {
+  const isCollapsedOutlineSidebar = window.sessionStorage.getItem('hideCourseOutlineSidebar');
+
+  const { courseId } = useParams();
+  const { isNewDiscussionSidebarViewEnabled } = useModel('courseHomeMeta', courseId);
+  const SidebarContext = isNewDiscussionSidebarViewEnabled ? NewSidebarContext : OldSidebarContext;
+
+  const {
+    unitId,
+    initialSidebar,
+    currentSidebar,
+    toggleSidebar,
+    shouldDisplayFullScreen,
+  } = useContext(SidebarContext);
+
+  const isOpenSidebar = !initialSidebar && !isCollapsedOutlineSidebar;
+  const [isOpen, setIsOpen] = useState(true);
+
+  const collapseSidebar = () => {
+    toggleSidebar(null);
+    window.sessionStorage.setItem('hideCourseOutlineSidebar', 'true');
+  };
+
+  const handleToggleCollapse = () => {
+    if (currentSidebar === ID) {
+      collapseSidebar();
+    } else {
+      toggleSidebar(ID);
+      window.sessionStorage.removeItem('hideCourseOutlineSidebar');
+      window.sessionStorage.setItem(`notificationTrayStatus.${courseId}`, 'closed');
+    }
+  };
+
+  useEffect(() => {
+    if (isOpenSidebar && currentSidebar !== ID && toggleSidebar) {
+      toggleSidebar(ID);
+    }
+  }, [initialSidebar, unitId]);
 
   // Collapse sidebar if screen resized to a width that displays the sidebar automatically
   useLayoutEffect(() => {
@@ -130,21 +141,11 @@ export const useCourseOutlineSidebar = () => {
   }, [isOpen]);
 
   return {
-    courseId,
     unitId,
     currentSidebar,
     shouldDisplayFullScreen,
-    isEnabledCompletionTracking,
     isOpen,
     setIsOpen,
     handleToggleCollapse,
-    isActiveEntranceExam,
-    courseOutlineStatus,
-    activeSequenceId,
-    sections,
-    sequences,
-    units,
-    handleUnitClick,
-    sequenceStatus,
   };
 };
