@@ -1,15 +1,12 @@
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, IconButton, useToggle } from '@openedx/paragon';
+import { useToggle } from '@openedx/paragon';
 import { LOADING } from '@src/constants';
-import {
-  CourseOutlineHeading,
-} from '@src/courseware/course/sidebar/sidebars/course-outline/components/CourseOutlineHeading';
 
 import {
   useCourseOutlineData,
 } from '@src/courseware/course/sidebar/sidebars/course-outline/hooks';
 import PageLoading from '@src/generic/PageLoading';
-import { CourseOutlineSidebarHeadingSlot } from "@src/plugin-slots/CourseOutlineSidebarHeadingSlot";
+import { CourseOutlineSidebarHeadingSlot } from '@src/plugin-slots/CourseOutlineSidebarHeadingSlot';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';

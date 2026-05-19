@@ -1,7 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { CourseTabLinksSlot } from '../plugin-slots/CourseTabLinksSlot';
 import { CoursewareSearch, CoursewareSearchToggle } from '../course-home/courseware-search';
 import { useCoursewareSearchState } from '../course-home/courseware-search/hooks';
 
