@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
+import SequenceBottomNavigationSlot from '@src/plugin-slots/SequenceBottomNavigationSlot';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
@@ -224,7 +225,21 @@ const Sequence = ({
               isOriginalUserStaff={originalUserIsStaff}
               renderUnitNavigation={renderUnitNavigation}
             />
-            {unitHasLoaded && renderUnitNavigation(false)}
+            {unitHasLoaded && (
+            <SequenceBottomNavigationSlot
+              sequenceId={sequenceId}
+              unitId={unitId}
+              previousHandler={() => {
+                logEvent('edx.ui.lms.sequence.previous_selected', 'bottom');
+                handlePrevious();
+              }}
+              nextHandler={() => {
+                logEvent('edx.ui.lms.sequence.next_selected', 'bottom');
+                handleNext();
+              }}
+              onNavigate={onNavigate}
+            />
+            )}
           </div>
         </div>
         <NotificationsDiscussionsSidebarSlot courseId={courseId} />
