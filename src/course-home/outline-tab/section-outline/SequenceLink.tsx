@@ -15,6 +15,7 @@ interface Props {
     showLink: boolean;
     title: string;
     hideFromTOC: boolean;
+    optionalCompletion?: boolean;
   }
 }
 

@@ -33,6 +33,7 @@ const Unit = ({
   const unit = useModel(modelKeys.units, id);
   const view = authenticatedUser ? views.student : views.public;
   const shouldDisplayUnitPreview = pathname.startsWith('/preview') && isOriginalUserStaff;
+  const { optionalCompletion } = unit;
 
   const getUrl = usePluginsCallback('getIFrameUrl', () => getIFrameUrl({
     id,
@@ -48,6 +49,11 @@ const Unit = ({
   return (
     <div className="unit">
       <UnitTitleSlot unitId={id} {...{ unit, renderUnitNavigation }} />
+      {optionalCompletion && (
+        <div className="alert alert-info small my-3" role="alert" data-testid="optional-completion-unit-alert">
+          {formatMessage(messages.optionalCompletionUnitAlert)}
+        </div>
+      )}
       <UnitSuspense {...{ courseId, id }} />
       <ContentIFrame
         elementId="unit-iframe"

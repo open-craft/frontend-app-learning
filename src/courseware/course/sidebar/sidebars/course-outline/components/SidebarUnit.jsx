@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useIntl } from '@edx/frontend-platform/i18n';
+import { Badge } from '@openedx/paragon';
 
 import messages from '../messages';
 import UnitIcon, { UNIT_ICON_TYPES } from './UnitIcon';
@@ -20,6 +21,7 @@ const SidebarUnit = ({
   const intl = useIntl();
   const {
     complete,
+    optionalCompletion,
     title,
     icon = UNIT_ICON_TYPES.other,
   } = unit;
@@ -40,10 +42,15 @@ const SidebarUnit = ({
         <div className="col-auto p-0">
           <UnitIcon type={iconType} isCompleted={completeAndEnabled} />
         </div>
-        <div className="col-10 p-0 ml-3 text-break">
+        <div className="d-flex justify-content-between col-10 p-0 ml-3 text-break">
           <span className="align-middle">
             {title}
           </span>
+          {optionalCompletion && (
+            <Badge className="align-self-center text-uppercase mr-1 border" variant="light" data-testid="optional-completion-badge-sidebar-unit">
+              {intl.formatMessage(messages.optionalCompletion)}
+            </Badge>
+          )}
           {isCompletionTrackingEnabled && (
             <span className="sr-only">
               , {intl.formatMessage(complete ? messages.completedUnit : messages.incompleteUnit)}
@@ -64,6 +71,7 @@ SidebarUnit.propTypes = {
     id: PropTypes.string,
     title: PropTypes.string,
     type: PropTypes.string,
+    optionalCompletion: PropTypes.bool,
   }).isRequired,
   isActive: PropTypes.bool.isRequired,
   isLocked: PropTypes.bool.isRequired,

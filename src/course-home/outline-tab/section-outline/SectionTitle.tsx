@@ -1,6 +1,6 @@
 import React from 'react';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Icon } from '@openedx/paragon';
+import { Badge, Icon } from '@openedx/paragon';
 import { CheckCircle, CheckCircleOutline, DisabledVisible } from '@openedx/paragon/icons';
 
 import messages from '../messages';
@@ -9,9 +9,12 @@ interface Props {
   complete: boolean;
   hideFromTOC: boolean;
   title: string;
+  optionalCompletion?: boolean;
 }
 
-const SectionTitle: React.FC<Props> = ({ complete, hideFromTOC, title }) => {
+const SectionTitle: React.FC<Props> = ({
+  complete, hideFromTOC, title, optionalCompletion,
+}) => {
   const intl = useIntl();
   return (
     <div className="d-flex row w-100 m-0">
@@ -51,6 +54,11 @@ const SectionTitle: React.FC<Props> = ({ complete, hideFromTOC, title }) => {
           </span>
         )}
       </div>
+      )}
+      {optionalCompletion && (
+        <Badge className="align-self-center text-uppercase pt-1 border" variant="light" data-testid="optional-completion-badge-outline-section">
+          {intl.formatMessage(messages.optionalCompletion)}
+        </Badge>
       )}
     </div>
   );

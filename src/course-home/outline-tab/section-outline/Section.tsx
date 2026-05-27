@@ -18,6 +18,7 @@ interface Props {
     sequenceIds: string[];
     title: string;
     hideFromTOC: boolean;
+    optionalCompletion?: boolean;
   };
 }
 
@@ -33,6 +34,7 @@ const Section: React.FC<Props> = ({
     sequenceIds,
     title,
     hideFromTOC,
+    optionalCompletion,
   } = section;
   const {
     courseBlocks: {
@@ -56,7 +58,12 @@ const Section: React.FC<Props> = ({
       <Collapsible
         className="mb-2"
         styling="card-lg"
-        title={<SectionTitle {...{ complete, hideFromTOC, title }} />}
+        title={(
+          <SectionTitle {...{
+            complete, hideFromTOC, title, optionalCompletion,
+          }}
+          />
+        )}
         open={open}
         onToggle={() => { setOpen(!open); }}
         iconWhenClosed={(

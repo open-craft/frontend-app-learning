@@ -1,7 +1,7 @@
 import React from 'react';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Link } from 'react-router-dom';
-import { Icon } from '@openedx/paragon';
+import { Badge, Icon } from '@openedx/paragon';
 import { CheckCircleOutline, CheckCircle } from '@openedx/paragon/icons';
 
 import EffortEstimate from '../../../shared/effort-estimate';
@@ -12,7 +12,7 @@ interface Props {
   complete: boolean;
   showLink: boolean;
   title: string;
-  sequence: object;
+  sequence: { optionalCompletion?: boolean };
   id: string;
 }
 
@@ -27,6 +27,7 @@ const SequenceTitle: React.FC<Props> = ({
   const courseId = useContextId();
   const coursewareUrl = <Link to={`/course/${courseId}/${id}`}>{title}</Link>;
   const displayTitle = showLink ? coursewareUrl : title;
+  const { optionalCompletion } = sequence;
 
   return (
     <div className="row w-100 m-0">
@@ -49,12 +50,17 @@ const SequenceTitle: React.FC<Props> = ({
           />
         )}
       </div>
-      <div className="col-10 p-0 ml-3 text-break">
+      <div className="d-flex justify-content-between col-11 p-0 ml-3 text-break">
         <span className="align-middle">{displayTitle}</span>
         <span className="sr-only">
           , {intl.formatMessage(complete ? messages.completedAssignment : messages.incompleteAssignment)}
         </span>
         <EffortEstimate className="ml-3 align-middle" block={sequence} />
+        {optionalCompletion && (
+          <Badge className="align-self-center text-uppercase mr-5 pt-1 border" variant="light" data-testid="optional-completion-badge-outline-subsection">
+            {intl.formatMessage(messages.optionalCompletion)}
+          </Badge>
+        )}
       </div>
     </div>
   );

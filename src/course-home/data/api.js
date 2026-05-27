@@ -50,6 +50,7 @@ export function normalizeOutlineBlocks(courseId, blocks) {
           resumeBlock: block.resume_block,
           sequenceIds: block.children || [],
           hideFromTOC: block.hide_from_toc,
+          optionalCompletion: block.optional_completion,
         };
         break;
 
@@ -68,6 +69,7 @@ export function normalizeOutlineBlocks(courseId, blocks) {
           title: block.display_name,
           hideFromTOC: block.hide_from_toc,
           navigationDisabled: block.navigation_disabled,
+          optionalCompletion: block.optional_completion,
         };
         break;
 
