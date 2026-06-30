@@ -9,8 +9,13 @@
         position: relative;
     }
 
-    // The fixed, full-height overlay needs its own scroll context.
+    // The fixed, full-height overlay needs its own scroll context. Height is owned
+    // here instead of Bootstrap's `vh-100`: iOS Safari resolves `100vh` to the large
+    // viewport (URL bar hidden), hiding the bottom of a long outline behind the bar.
+    // `100dvh` tracks the visible height; `100vh` is the fallback for older engines.
     &.fixed-top {
+        height: 100vh;
+        height: 100dvh;
         overflow-y: auto;
     }
 }
