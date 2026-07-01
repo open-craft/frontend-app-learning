@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { getConfig } from '@edx/frontend-platform';
 import { getLocale, isRtl, useIntl } from '@edx/frontend-platform/i18n';
 import { useContextId } from '../../../data/hooks';
 import { useModel } from '../../../generic/model-store';
@@ -18,9 +19,13 @@ const CompletionDonutChart = ({ optional = false }) => {
   const incompleteCount = optional ? completionSummary.optionalIncompleteCount : completionSummary.incompleteCount;
   const lockedCount = optional ? completionSummary.optionalLockedCount : completionSummary.lockedCount;
 
+  const percentagePrecision = Number(getConfig().COMPLETION_PERCENTAGE_PRECISION) || 0;
+
   const numTotalUnits = completeCount + incompleteCount + lockedCount;
-  const completePercentage = completeCount ? Number(((completeCount / numTotalUnits) * 100).toFixed(0)) : 0;
-  const lockedPercentage = lockedCount ? Number(((lockedCount / numTotalUnits) * 100).toFixed(0)) : 0;
+  const completePercentage = completeCount
+    ? Number(((completeCount / numTotalUnits) * 100).toFixed(percentagePrecision)) : 0;
+  const lockedPercentage = lockedCount
+    ? Number(((lockedCount / numTotalUnits) * 100).toFixed(percentagePrecision)) : 0;
   const incompletePercentage = 100 - completePercentage - lockedPercentage;
 
   const isLocaleRtl = isRtl(getLocale());
