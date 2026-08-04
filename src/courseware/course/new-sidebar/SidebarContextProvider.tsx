@@ -10,7 +10,6 @@ import { getLocalStorage, setLocalStorage } from '../../../data/localStorage';
 import { useModel } from '../../../generic/model-store';
 import { WIDGETS } from '../../../constants';
 import SidebarContext from './SidebarContext';
-import { SIDEBARS } from './sidebars';
 
 interface Props {
   courseId: string;
@@ -28,16 +27,12 @@ const SidebarProvider: React.FC<Props> = ({
   const windowWidth = useWindowSize().width ?? window.innerWidth;
   const shouldDisplayFullScreen = windowWidth < breakpoints.large.minWidth;
   const shouldDisplaySidebarOpen = windowWidth > breakpoints.medium.minWidth;
-  const query = new URLSearchParams(window.location.search);
-  const isInitiallySidebarOpen = shouldDisplaySidebarOpen || query.get('sidebar') === 'true';
   const sidebarKey = `sidebar.${courseId}`;
 
-  let initialSidebar = shouldDisplayFullScreen && sidebarKey in localStorage ? getLocalStorage(sidebarKey)
-    : SIDEBARS.DISCUSSIONS_NOTIFICATIONS.ID;
-
-  if (!shouldDisplayFullScreen && isInitiallySidebarOpen) {
-    initialSidebar = SIDEBARS.DISCUSSIONS_NOTIFICATIONS.ID;
-  }
+  // The discussions/notifications sidebar is never opened automatically: on a wide viewport the
+  // course outline is the default, and this sidebar only opens when the learner asks for it.
+  // We still restore whichever sidebar the learner last opened themselves.
+  const initialSidebar = sidebarKey in localStorage ? getLocalStorage(sidebarKey) : null;
   const [currentSidebar, setCurrentSidebar] = useState(initialSidebar);
   const [notificationStatus, setNotificationStatus] = useState(getLocalStorage(`notificationStatus.${courseId}`));
   const [hideDiscussionbar, setHideDiscussionbar] = useState(false);
@@ -54,12 +49,11 @@ const SidebarProvider: React.FC<Props> = ({
   }, [courseId]);
 
   useEffect(() => {
-    window.sessionStorage.setItem('hideCourseOutlineSidebar', 'true');
     window.sessionStorage.setItem(`notificationTrayStatus.${courseId}`, 'open');
     setHideDiscussionbar(!isDiscussionbarAvailable);
     setHideNotificationbar(!isNotificationbarAvailable);
     if (initialSidebar && currentSidebar !== initialSidebar) {
-      setCurrentSidebar(SIDEBARS.DISCUSSIONS_NOTIFICATIONS.ID);
+      setCurrentSidebar(initialSidebar);
     }
   }, [unitId, topic]);
 
@@ -104,6 +98,7 @@ const SidebarProvider: React.FC<Props> = ({
   }, [handleWidgetToggle, handleSidebarToggle, clearSidebarKeyIfWidgetsUnavailable]);
 
   const contextValue = useMemo(() => ({
+    initialSidebar,
     toggleSidebar,
     onNotificationSeen,
     setNotificationStatus,
@@ -119,7 +114,7 @@ const SidebarProvider: React.FC<Props> = ({
     hideNotificationbar,
     isNotificationbarAvailable,
     isDiscussionbarAvailable,
-  }), [courseId, currentSidebar, notificationStatus, onNotificationSeen, shouldDisplayFullScreen,
+  }), [courseId, currentSidebar, initialSidebar, notificationStatus, onNotificationSeen, shouldDisplayFullScreen,
     shouldDisplaySidebarOpen, toggleSidebar, unitId, upgradeNotificationCurrentState, hideDiscussionbar,
     hideNotificationbar, isNotificationbarAvailable, isDiscussionbarAvailable]);
 

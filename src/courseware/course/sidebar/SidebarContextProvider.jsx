@@ -7,30 +7,21 @@ import {
 import { useModel } from '@src/generic/model-store';
 import { getLocalStorage, setLocalStorage } from '@src/data/localStorage';
 
-import * as discussionsSidebar from './sidebars/discussions';
-import * as notificationsSidebar from './sidebars/notifications';
 import SidebarContext from './SidebarContext';
-import { SIDEBARS } from './sidebars';
 
 const SidebarProvider = ({
   courseId,
   unitId,
   children,
 }) => {
-  const { verifiedMode } = useModel('courseHomeMeta', courseId);
   const topic = useModel('discussionTopics', unitId);
-  const isUnitHasDiscussionTopics = topic?.id && topic?.enabledInContext;
   const shouldDisplayFullScreen = useWindowSize().width < breakpoints.extraLarge.minWidth;
   const shouldDisplaySidebarOpen = useWindowSize().width > breakpoints.extraLarge.minWidth;
-  const query = new URLSearchParams(window.location.search);
-  const isInitiallySidebarOpen = shouldDisplaySidebarOpen || query.get('sidebar') === 'true';
 
-  let initialSidebar = shouldDisplayFullScreen ? getLocalStorage(`sidebar.${courseId}`) : null;
-  if (!shouldDisplayFullScreen && isInitiallySidebarOpen) {
-    initialSidebar = isUnitHasDiscussionTopics
-      ? SIDEBARS[discussionsSidebar.ID].ID
-      : verifiedMode && SIDEBARS[notificationsSidebar.ID].ID;
-  }
+  // The auxiliary (right) sidebar is never opened automatically: on a wide viewport the course
+  // outline is the default, and the right sidebar only opens when the learner asks for it.
+  // On mobile we still restore whichever sidebar the learner last opened themselves.
+  const initialSidebar = shouldDisplayFullScreen ? getLocalStorage(`sidebar.${courseId}`) : null;
   const [currentSidebar, setCurrentSidebar] = useState(initialSidebar);
   const [notificationStatus, setNotificationStatus] = useState(getLocalStorage(`notificationStatus.${courseId}`));
   const [upgradeNotificationCurrentState, setUpgradeNotificationCurrentState] = useState(getLocalStorage(`upgradeNotificationCurrentState.${courseId}`));
